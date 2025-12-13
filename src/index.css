@@ -1,0 +1,23 @@
+@import "./theme/fonts/fonts.css";
+@import "./theme/loader.css";
+
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  height: 100vh;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus {
+  outline: none !important;
+}
+
+@media screen and (max-width: 640px) {
+  body,
+  html {
+    width: 100vw;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
