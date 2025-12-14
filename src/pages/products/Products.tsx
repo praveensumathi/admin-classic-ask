@@ -69,7 +69,15 @@ function Products() {
   const [selectedProductId, setSelectedProductId] = useState("");
   const [selectedProductIds, setSelectedProductIds] = useState<string[]>([]);
   const [searchProductCode, setSearchProductCode] = useState("");
-  const { data, refetch } = useGetProducts(searchProductCode);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(1);
+
+  const { data: productResponse, refetch } = useGetProducts(
+    searchProductCode,
+    page,
+    rowsPerPage
+  );
+
   const [
     deleteMultipleProductsDialogOpen,
     setDeleteMultipleProductsDialogOpen,
@@ -77,8 +85,6 @@ function Products() {
   const [selectedCheckboxCount, setSelectedCheckboxCount] = useState(0);
   const [deleteOutOfStockDialogOpen, setDeleteOutOfStockDialogOpen] =
     useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [page, setPage] = useState(1);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchProductCode(event.target.value);
@@ -201,7 +207,7 @@ function Products() {
 
   return (
     <>
-      <Grid container>
+      <Grid container rowGap={3}>
         <Grid item xs={12}>
           <Box
             sx={{
@@ -212,7 +218,7 @@ function Products() {
             }}
           >
             <Typography variant="h4" gutterBottom component="div">
-              Products ({data?.total})
+              Products ({productResponse?.total})
             </Typography>
             {selectedProductIds.length > 1 ? (
               <>
@@ -273,71 +279,28 @@ function Products() {
             )}
           </Box>
         </Grid>
-        <Grid
-          item
-          container
-          xs={12}
-          mb={2}
-          mt={3}
-          justifyContent={"space-between"}
-          alignItems={"center"}
-          display={"flex"}
-        >
-          <Grid item xs={12} md={6}>
-            <DebounceInput
-              element={SearchTextField}
-              debounceTimeout={1000}
-              id="productCode"
-              value={searchProductCode}
-              onChange={handleInputChange}
-              variant="outlined"
-              placeholder="Search Name,code"
-              size="small"
-            />
-            <Button
-              variant="outlined"
-              size="small"
-              sx={{ padding: 0.8, marginLeft: 2 }}
-              onClick={handleClearSearch}
-            >
-              Clear Search
-            </Button>
-          </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Box display="flex" alignItems="center">
-              <Pagination
-                //count={props.pageInfo?.totalPages}
-                count={20}
-                variant="outlined"
-                //onChange={(_e, page) => props.onPageChange(page)}
-                sx={{
-                  "& .MuiPaginationItem-page.Mui-selected": {
-                    backgroundColor: theme.palette.primary.main,
-                    color: "#FFFFFF",
-                  },
-                }}
-              />
-              <FormControl sx={{ ml: 1, width: "15%" }} size="small">
-                <InputLabel id="take-count-label">Page Count</InputLabel>
-                <Select
-                  labelId="Page Count"
-                  id="Page Count"
-                  value={rowsPerPage}
-                  label="Page Count"
-                  onChange={(_e) => {
-                    setRowsPerPage(Number(_e.target.value));
-                    setPage(1);
-                  }}
-                >
-                  <MenuItem value={10}>10</MenuItem>
-                  <MenuItem value={20}>20</MenuItem>
-                  <MenuItem value={30}>30</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-          </Grid>
+        <Grid item xs={12} md={6}>
+          <DebounceInput
+            element={SearchTextField}
+            debounceTimeout={1000}
+            id="productCode"
+            value={searchProductCode}
+            onChange={handleInputChange}
+            variant="outlined"
+            placeholder="Search Name,code"
+            size="small"
+          />
+          <Button
+            variant="outlined"
+            size="small"
+            sx={{ padding: 0.8, marginLeft: 2 }}
+            onClick={handleClearSearch}
+          >
+            Clear Search
+          </Button>
         </Grid>
+
         <Grid item xs={12}>
           <TableContainer
             elevation={0}
@@ -399,9 +362,9 @@ function Products() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data &&
-                  data.products.length > 0 &&
-                  data.products.map((product, index) => (
+                {productResponse &&
+                  productResponse.products.length > 0 &&
+                  productResponse.products.map((product, index) => (
                     <TableRow key={index}>
                       <TableCell>
                         <Checkbox
@@ -479,6 +442,36 @@ function Products() {
               </TableBody>
             </Table>
           </TableContainer>
+        </Grid>
+        <Grid item xs={12} justifyContent={"flex-end"} display={"flex"}>
+          <Pagination
+            count={productResponse?.pageInfo?.totalPages}
+            variant="outlined"
+            onChange={(_e, page) => setPage(page)}
+            sx={{
+              "& .MuiPaginationItem-page.Mui-selected": {
+                backgroundColor: theme.palette.primary.main,
+                color: "#FFFFFF",
+              },
+            }}
+          />
+          <FormControl sx={{ ml: 1, width: "8%" }} size="small">
+            <InputLabel id="take-count-label">Page Count</InputLabel>
+            <Select
+              labelId="Page Count"
+              id="Page Count"
+              value={rowsPerPage}
+              label="Page Count"
+              onChange={(_e) => {
+                setRowsPerPage(Number(_e.target.value));
+                setPage(1);
+              }}
+            >
+              <MenuItem value={10}>10</MenuItem>
+              <MenuItem value={20}>20</MenuItem>
+              <MenuItem value={30}>30</MenuItem>
+            </Select>
+          </FormControl>
         </Grid>
       </Grid>
       <ProductDialog

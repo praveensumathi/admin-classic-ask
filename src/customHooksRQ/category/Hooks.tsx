@@ -26,13 +26,19 @@ const getAllCategories = async () => {
   }
 };
 
-const getAllProducts = async (searchName: string) => {
+const getAllProducts = async (
+  searchName: string,
+  page: number,
+  pageSize: number
+) => {
   try {
     const response = await httpWithCredentials.get<IProductList>(
       "/product/getAllProducts",
       {
         params: {
-          searchName: searchName,
+          searchName,
+          page,
+          pageSize,
         },
       }
     );
@@ -248,10 +254,14 @@ export const usefetchProductsByCategory = (categoryId: string) => {
 //   });
 // };
 
-export const useGetProducts = (searchName: string) => {
+export const useGetProducts = (
+  searchName: string,
+  page: number,
+  pageSize: number
+) => {
   return useQuery({
-    queryKey: ["products", searchName],
-    queryFn: () => getAllProducts(searchName),
+    queryKey: ["products", { search: searchName, page, pageSize }],
+    queryFn: () => getAllProducts(searchName, page, pageSize),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   });

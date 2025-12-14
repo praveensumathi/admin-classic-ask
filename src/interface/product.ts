@@ -128,7 +128,15 @@ export interface Size {
   _id: string;
 }
 
+export interface IPageInfo {
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  totalItems: number;
+}
+
 export interface IProductList {
-  products: IProduct[],
-  total: number,
+  products: IProduct[];
+  total: number;
+  pageInfo: IPageInfo;
 }
