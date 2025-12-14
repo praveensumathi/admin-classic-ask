@@ -20,6 +20,7 @@ import { useAuthContext } from "../../context/AuthContext";
 import { useEffect, useState } from "react";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import theme from "../../theme/theme";
 
 const schema = yup.object().shape({
   phoneNumber: yup
@@ -132,7 +133,9 @@ function Login() {
                     alt=""
                   />
                 </Link>
-                <Typography sx={{ fontWeight: 600 }}>Venus Ethnic</Typography>
+                <Typography sx={{ fontWeight: 600 }}>
+                  {import.meta.env.VITE_HEADER_NAME}
+                </Typography>
               </Box>
             </Toolbar>
           </AppBar>
@@ -141,17 +144,16 @@ function Login() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              minHeight: "70vh",
-              marginTop: "20px",
+              minHeight: "100vh",
             }}
           >
             <Box>
-              <Typography variant="h5" align="center" gutterBottom>
+              <Typography variant="h5" align="center">
                 <b> Login</b>
               </Typography>
               <form onSubmit={handleSubmit(handleLogin)}>
                 <Typography sx={{ fontWeight: 600, opacity: 0.7, my: "7px" }}>
-                  PhoneNumber<span style={{ color: "red" }}>*</span>
+                  Phone Number<span style={{ color: "red" }}>*</span>
                 </Typography>
                 <TextField
                   variant="outlined"
@@ -170,6 +172,7 @@ function Login() {
                   }}
                   autoComplete="new"
                   required
+                  placeholder="Enter Phone number"
                 />
 
                 <Typography sx={{ my: "7px", fontWeight: 600, opacity: 0.7 }}>
@@ -188,6 +191,7 @@ function Login() {
                   sx={{
                     mt: 0,
                   }}
+                  placeholder="Enter password"
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">

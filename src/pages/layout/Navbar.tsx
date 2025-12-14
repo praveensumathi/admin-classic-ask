@@ -113,8 +113,8 @@ function Navbar() {
                   display: { xs: "none", sm: "block" },
                 }}
               >
-                Venus Ethnic
-              </Typography>{" "}
+                {import.meta.env.VITE_HEADER_NAME}
+              </Typography>
             </Box>
             <Stack
               flexDirection={"row"}

@@ -7,9 +7,14 @@ import {
   Box,
   Button,
   Dialog,
+  FormControl,
   Grid,
   IconButton,
+  InputLabel,
+  MenuItem,
+  Pagination,
   Paper,
+  Select,
   Slide,
   Table,
   TableBody,
@@ -38,6 +43,7 @@ import { useTableStyle } from "../../styles/TableStyle";
 import { DebounceInput } from "react-debounce-input";
 import SearchTextField from "../../common/components/SearchTextField";
 import { deleteOutofStockProduct } from "../../services/api";
+import theme from "../../theme/theme";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -71,6 +77,8 @@ function Products() {
   const [selectedCheckboxCount, setSelectedCheckboxCount] = useState(0);
   const [deleteOutOfStockDialogOpen, setDeleteOutOfStockDialogOpen] =
     useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(1);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchProductCode(event.target.value);
@@ -265,8 +273,16 @@ function Products() {
             )}
           </Box>
         </Grid>
-        <Grid item xs={12}>
-          <Box mt={2} mb={2}>
+        <Grid
+          item
+          container
+          xs={12}
+          my={2}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+          display={"flex"}
+        >
+          <Grid item xs={12} md={6}>
             <DebounceInput
               element={SearchTextField}
               debounceTimeout={1000}
@@ -285,7 +301,41 @@ function Products() {
             >
               Clear Search
             </Button>
-          </Box>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <Box display="flex" alignItems="center">
+              <Pagination
+                //count={props.pageInfo?.totalPages}
+                count={20}
+                variant="outlined"
+                //onChange={(_e, page) => props.onPageChange(page)}
+                sx={{
+                  "& .MuiPaginationItem-page.Mui-selected": {
+                    backgroundColor: theme.palette.primary.main,
+                    color: "#FFFFFF",
+                  },
+                }}
+              />
+              <FormControl sx={{ ml: 1, width: "15%" }} size="small">
+                <InputLabel id="take-count-label">Page Count</InputLabel>
+                <Select
+                  labelId="Page Count"
+                  id="Page Count"
+                  value={rowsPerPage}
+                  label="Page Count"
+                  onChange={(_e) => {
+                    setRowsPerPage(Number(_e.target.value));
+                    setPage(1);
+                  }}
+                >
+                  <MenuItem value={10}>10</MenuItem>
+                  <MenuItem value={20}>20</MenuItem>
+                  <MenuItem value={30}>30</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+          </Grid>
         </Grid>
         <Grid item xs={12}>
           <TableContainer

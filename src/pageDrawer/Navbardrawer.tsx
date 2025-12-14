@@ -103,7 +103,7 @@ function NavbarDrawer(props: INavbarProps) {
         }}
       >
         <Typography color="primary" sx={{ fontWeight: 800 }} fontSize={"large"}>
-          Venus Ethnic
+          {import.meta.env.VITE_HEADER_NAME}
         </Typography>
         <ArrowBackIosIcon sx={{ fontSize: "large" }} color="primary" />
       </Box>

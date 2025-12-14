@@ -50,7 +50,7 @@ function Customers() {
   const deleteCustomerMutation = useDeleteCustomer();
   const { updateSnackBarState } = useSnackBar();
 
-  const venusethnicURL = import.meta.env.VITE_VENUSETHNIC_URL;
+  const venusethnicURL = import.meta.env.VITE_CLASSIC_ASK_URL;
 
   const fetchAllCustomers = async () => {
     try {
