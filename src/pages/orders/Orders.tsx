@@ -130,7 +130,7 @@ export default function Orders() {
             <TextField
               variant="outlined"
               label="Order Number"
-              placeholder="VE-O-YYYY-YY-0"
+              placeholder="Enter order number"
               value={orderNumber || ""}
               onChange={handleOrderNumberChange}
             ></TextField>

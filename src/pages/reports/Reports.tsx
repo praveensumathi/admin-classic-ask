@@ -21,11 +21,11 @@ import OnlineGSTPdf from "../orders/onlineGST/OnlineGSTPdf";
 function Reports() {
   const { updateSnackBarState } = useSnackBar();
   const Reports = {
-    offlineReport: "Offline Selling Report",
-    onlineReport: "Online Selling Report",
-    PurchaseProductReport: "Purchase Product Report",
-    inStockReport: "Product InStock Report",
-    offlineGstBill: "Offline GST Bill",
+    // offlineReport: "Offline Selling Report",
+    // onlineReport: "Online Selling Report",
+    // PurchaseProductReport: "Purchase Product Report",
+    // inStockReport: "Product InStock Report",
+    // offlineGstBill: "Offline GST Bill",
     onlineGstBill: "Online GST Bill",
   };
 
@@ -107,17 +107,19 @@ function Reports() {
             onChange={(event, value) => {
               setSelectedReport(value);
             }}
+            value={Reports.onlineGstBill}
           />
         </Grid>
         <Grid
           item
           xs={12}
+          columnGap={3}
           sx={{
             display: "flex",
             marginTop: 2,
           }}
         >
-          <Grid item xs={4}>
+          <Grid item xs={2}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
                 format="dd-MM-yyyy"
@@ -127,7 +129,7 @@ function Reports() {
               />
             </LocalizationProvider>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={2}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
                 format="dd-MM-yyyy"
@@ -139,13 +141,13 @@ function Reports() {
           </Grid>
           <Grid
             item
-            xs={4}
+            xs={1}
             sx={{
               display: "flex",
               alignItems: "center",
             }}
           >
-            {selectedReport === Reports.offlineReport ||
+            {/* {selectedReport === Reports.offlineReport ||
             selectedReport === Reports.onlineReport ||
             selectedReport === Reports.PurchaseProductReport ||
             selectedReport === Reports.inStockReport ? (
@@ -171,7 +173,9 @@ function Reports() {
               <GstBillpdf fromDate={fromDate} toDate={toDate} />
             ) : selectedReport === Reports.onlineGstBill ? (
               <OnlineGSTPdf fromDate={fromDate} toDate={toDate} />
-            ) : null}
+            ) : null} */}
+
+            <OnlineGSTPdf fromDate={fromDate} toDate={toDate} />
           </Grid>
         </Grid>
       </Grid>

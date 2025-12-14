@@ -277,7 +277,8 @@ function Products() {
           item
           container
           xs={12}
-          my={2}
+          mb={2}
+          mt={3}
           justifyContent={"space-between"}
           alignItems={"center"}
           display={"flex"}

@@ -62,7 +62,7 @@ function OnlineGSTPdf({ fromDate, toDate }) {
   return (
     <Box>
       <Button onClick={generatePDF} variant="contained">
-        Generate PDF
+        Generate Bill
       </Button>
     </Box>
   );

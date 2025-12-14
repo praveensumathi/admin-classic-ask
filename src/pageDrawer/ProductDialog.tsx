@@ -92,7 +92,7 @@ function ProductDialog(props: IProps) {
   );
 
   const [purchaseDate, setPurchaseDate] = useState<Date | null>(null);
-  const [isWithGST, setIsWithGST] = useState<boolean>(false);
+  //const [isWithGST, setIsWithGST] = useState<boolean>(false);
   const [sellerName, setSellerName] = useState<string>("");
 
   const [isPosterUploading, setIsPosterUploading] = useState(false);
@@ -165,7 +165,7 @@ function ProductDialog(props: IProps) {
     setNewPosterImageFile(null);
     setRemovedProductImages([]);
     setPurchaseDate(null);
-    setIsWithGST(false);
+    //setIsWithGST(false);
     setSellerName("");
   };
 
@@ -331,7 +331,7 @@ function ProductDialog(props: IProps) {
       formData.append("purchaseDate", purchaseDate.toDateString());
     }
 
-    formData.append("isWithGST", isWithGST ? "true" : "false");
+    //formData.append("isWithGST", isWithGST ? "true" : "false");
     formData.append("sellerName", sellerName);
 
     if (!isEdit) {
@@ -657,12 +657,12 @@ function ProductDialog(props: IProps) {
 
             <Grid item xs={8}>
               <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <Grid container>
+                <Grid container columnGap={2}>
                   <Grid item xs={4}>
                     <Box>
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
-                          label="Purchased Date(MM/DD/YYYY)"
+                          label="Purchased Date"
                           value={
                             product.purchaseDate
                               ? new Date(product.purchaseDate)
@@ -673,7 +673,7 @@ function ProductDialog(props: IProps) {
                       </LocalizationProvider>
                     </Box>
                   </Grid>
-                  <Grid item xs={4}>
+                  {/* <Grid item xs={4}>
                     <Box sx={{ marginLeft: 3 }}>
                       <Typography variant="body1" fontWeight={"bold"}>
                         With GST
@@ -700,7 +700,7 @@ function ProductDialog(props: IProps) {
                         />
                       </RadioGroup>
                     </Box>
-                  </Grid>
+                  </Grid> */}
                   <Grid item xs={4}>
                     <Box>
                       <TextField
