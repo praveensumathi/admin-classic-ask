@@ -403,3 +403,32 @@ export const usedeleteCategoryWiseProduct = () => {
     },
   });
 };
+
+// update category sort order by accepting ordered array of category ids
+const updateCategoryOrder = async (orderedCategoryIds: string[]) => {
+  try {
+    const response = await httpWithCredentials.put(
+      "/category/updateCategorySortOrder",
+      {
+        orderedCategoryIds,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const useUpdateCategoryOrder = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (orderedCategoryIds: string[]) =>
+      updateCategoryOrder(orderedCategoryIds),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+};

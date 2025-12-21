@@ -1,4 +1,4 @@
-import { Box, Typography, Grid, Hidden, IconButton } from "@mui/material";
+import { Box, Typography, Grid, IconButton } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -10,11 +10,14 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useState } from "react";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import { useState, useRef, useEffect, memo } from "react";
+import Sortable from "sortablejs";
 import CategoryDrawer from "../../pageDrawer/CategoryDrawer";
 import {
   useDeleteCategory,
   useGetCategories,
+  useUpdateCategoryOrder,
 } from "../../customHooksRQ/category/Hooks";
 import { ICategory } from "../../interface/category";
 import { CategoryInitialValue } from "../../constants/IntialValues";
@@ -22,6 +25,69 @@ import CommonDeleteDialog from "../../common/components/CommonDeleteDialog";
 import { useSnackBar } from "../../context/SnackBarContext";
 import CategoryWiseProductDialog from "../../pageDialog/CategoryWiseProductDialog";
 import { useTableStyle } from "../../styles/TableStyle";
+
+type CategoryRowProps = {
+  category: ICategory;
+  onEdit: (category: ICategory) => void;
+  onDelete: (category: ICategory) => void;
+  onViewProducts: (id: string) => void;
+};
+
+const CategoryRow = memo(
+  function CategoryRow({
+    category,
+    onEdit,
+    onDelete,
+    onViewProducts,
+  }: CategoryRowProps) {
+    return (
+      <TableRow key={category._id} data-id={category._id}>
+        <TableCell>
+          <IconButton className="drag-handle" sx={{ cursor: "grab" }}>
+            <DragIndicatorIcon />
+          </IconButton>
+        </TableCell>
+        <TableCell>
+          <img
+            src={category.image}
+            alt={category.name}
+            style={{ height: "70px", width: "70px" }}
+          />
+        </TableCell>
+        <TableCell>{category.name}</TableCell>
+        <TableCell>{category.description}</TableCell>
+        <TableCell width={"10%"} sx={{ textAlign: "center" }}>
+          {category.productCount}
+        </TableCell>
+        <TableCell width={"10%"}>
+          {category.productCount && category.productCount > 0 ? (
+            <Button onClick={() => onViewProducts(category._id ?? "")}>
+              View Products
+            </Button>
+          ) : null}
+        </TableCell>
+        <TableCell sx={{ width: "10%" }}>
+          <Box
+            sx={{
+              cursor: "pointer",
+              display: "flex",
+              justifyContent: "space-around",
+            }}
+          >
+            <IconButton>
+              <EditIcon onClick={() => onEdit(category)} />
+            </IconButton>
+
+            <IconButton>
+              <DeleteIcon onClick={() => onDelete(category)} />
+            </IconButton>
+          </Box>
+        </TableCell>
+      </TableRow>
+    );
+  },
+  (prev, next) => prev.category === next.category
+);
 
 function Categories() {
   const classes = useTableStyle();
@@ -36,7 +102,45 @@ function Categories() {
 
   const { data } = useGetCategories();
   const deleteCategoryMutation = useDeleteCategory();
+  const updateOrderMutation = useUpdateCategoryOrder();
   const { updateSnackBarState } = useSnackBar();
+
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const tbodyRef = useRef<HTMLTableSectionElement | null>(null);
+
+  useEffect(() => {
+    if (data) setCategories(data);
+  }, [data]);
+
+  useEffect(() => {
+    if (!tbodyRef.current || !categories) return;
+    const el = tbodyRef.current;
+    const sortable = Sortable.create(el, {
+      animation: 150,
+      handle: ".drag-handle",
+      onEnd: (evt) => {
+        const oldIndex = evt.oldIndex as number | undefined;
+        const newIndex = evt.newIndex as number | undefined;
+        if (oldIndex === undefined || newIndex === undefined) return;
+        const newCategories = [...categories];
+        const [moved] = newCategories.splice(oldIndex, 1);
+        newCategories.splice(newIndex, 0, moved);
+        setCategories(newCategories);
+        const orderedIds = newCategories.map((c) => c._id ?? "");
+        updateOrderMutation.mutate(orderedIds, {
+          onSuccess: () =>
+            updateSnackBarState(true, "Category order updated.", "success"),
+          onError: () =>
+            updateSnackBarState(
+              true,
+              "Error updating category order.",
+              "error"
+            ),
+        });
+      },
+    });
+    return () => sortable.destroy();
+  }, [categories, updateOrderMutation, updateSnackBarState]);
 
   const handleDialogclose = () => {
     setCategoryWiseProductDialogOpen(false);
@@ -110,6 +214,7 @@ function Categories() {
             <Table aria-label="simple table">
               <TableHead className={classes.table}>
                 <TableRow>
+                  <TableCell width={"5%"} />
                   <TableCell width={"10%"}>
                     <Typography variant="subtitle1" fontWeight="bold">
                       Image
@@ -148,59 +253,16 @@ function Categories() {
                   </TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {data &&
-                  data.map((category) => (
-                    <TableRow key={category.name}>
-                      <TableCell>
-                        <img
-                          src={category.image}
-                          style={{ height: "70px", width: "70px" }}
-                        />
-                      </TableCell>
-                      <TableCell>{category.name}</TableCell>
-                      <TableCell>{category.description}</TableCell>
-                      <TableCell
-                        width={"10%"}
-                        sx={{
-                          textAlign: "center",
-                        }}
-                      >
-                        {category.productCount}
-                      </TableCell>
-                      <TableCell width={"10%"}>
-                        {category.productCount && category.productCount > 0 ? (
-                          <Button
-                            onClick={() =>
-                              handleclickViewProduct(category._id ?? "")
-                            }
-                          >
-                            View Products
-                          </Button>
-                        ) : null}
-                      </TableCell>
-                      <TableCell sx={{ width: "10%" }}>
-                        <Box
-                          sx={{
-                            cursor: "pointer",
-                            display: "flex",
-                            justifyContent: "space-around",
-                          }}
-                        >
-                          <IconButton>
-                            <EditIcon
-                              onClick={() => handleEditCategory(category)}
-                            />
-                          </IconButton>
-
-                          <IconButton>
-                            <DeleteIcon
-                              onClick={() => openDeleteDialog(category)}
-                            />
-                          </IconButton>
-                        </Box>
-                      </TableCell>
-                    </TableRow>
+              <TableBody ref={tbodyRef as any}>
+                {categories &&
+                  categories.map((category) => (
+                    <CategoryRow
+                      key={category._id}
+                      category={category}
+                      onEdit={handleEditCategory}
+                      onDelete={openDeleteDialog}
+                      onViewProducts={handleclickViewProduct}
+                    />
                   ))}
               </TableBody>
             </Table>
