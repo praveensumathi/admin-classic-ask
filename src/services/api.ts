@@ -92,7 +92,7 @@ const updateOrderStatus = async (updateOrder: FormData) => {
 const logOut = async () => {
   try {
     const response = await httpWithCredentials.get<ILoginResponse>(
-      "/customer/logout"
+      "/customer/adminLogout"
     );
     return response.data;
   } catch (error) {
@@ -141,8 +141,9 @@ const getOfflineOrdersReportByDateWise = async (
   toDate: string
 ) => {
   try {
-    const url = `${import.meta.env.VITE_AXIOS_BASE_URL
-      }offlineOrder/getOfflineOrdersReportByDateWise/${fromDate}/${toDate}`;
+    const url = `${
+      import.meta.env.VITE_AXIOS_BASE_URL
+    }offlineOrder/getOfflineOrdersReportByDateWise/${fromDate}/${toDate}`;
     window.open(url, "_blank");
   } catch (error) {
     throw error;
@@ -184,8 +185,9 @@ const getPurchaseProductReportByDateWise = async (
   toDate: string
 ) => {
   try {
-    const url = `${import.meta.env.VITE_AXIOS_BASE_URL
-      }product/getPurchaseProductReportByDateWise/${fromDate}/${toDate}`;
+    const url = `${
+      import.meta.env.VITE_AXIOS_BASE_URL
+    }product/getPurchaseProductReportByDateWise/${fromDate}/${toDate}`;
     window.open(url, "_blank");
   } catch (error) {
     throw error;
@@ -194,8 +196,9 @@ const getPurchaseProductReportByDateWise = async (
 
 const getOnlineSellingReport = async (fromDate: string, toDate: string) => {
   try {
-    const url = `${import.meta.env.VITE_AXIOS_BASE_URL
-      }orders/getOnlineSellingReport/${fromDate}/${toDate}`;
+    const url = `${
+      import.meta.env.VITE_AXIOS_BASE_URL
+    }orders/getOnlineSellingReport/${fromDate}/${toDate}`;
     window.open(url, "_blank");
   } catch (error) {
     throw error;
@@ -207,8 +210,9 @@ const getProductInstockReportByDateWise = async (
   toDate: string
 ) => {
   try {
-    const url = `${import.meta.env.VITE_AXIOS_BASE_URL
-      }product/getProductInstockReportByDateWise/${fromDate}/${toDate}`;
+    const url = `${
+      import.meta.env.VITE_AXIOS_BASE_URL
+    }product/getProductInstockReportByDateWise/${fromDate}/${toDate}`;
     window.open(url, "_blank");
   } catch (error) {
     throw error;
