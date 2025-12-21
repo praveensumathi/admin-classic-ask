@@ -62,7 +62,7 @@ const adminLogin = async (credential: ILoginFormInputs) => {
 const isAuthorized = async () => {
   try {
     const response = await httpWithCredentials.get<IUser>(
-      "/customer/isAuthorized"
+      "/customer/adminIsAuthorized"
     );
     return response.data;
   } catch (error) {
