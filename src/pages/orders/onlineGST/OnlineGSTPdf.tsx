@@ -2,7 +2,10 @@ import { Box, Button } from "@mui/material";
 import React, { useState } from "react";
 import html2pdf from "html2pdf.js";
 import ReactDOM from "react-dom";
-import { getAllOnlineOrdersForGstByDateWise } from "../../../services/api";
+import {
+  downloadGSTSalesReportExcel,
+  getAllOnlineOrdersForGstByDateWise,
+} from "../../../services/api";
 import OnlineGSTBill from "./OnlineGSTBill";
 import { format } from "date-fns";
 import { useSnackBar } from "../../../context/SnackBarContext";
@@ -59,9 +62,20 @@ function OnlineGSTPdf({ fromDate, toDate }) {
     }
   };
 
+  const generateGSTExcel = async () => {
+    try {
+      const formattedFromDate = format(fromDate, "yyyy-MM-dd");
+      const formattedToDate = format(toDate, "yyyy-MM-dd");
+
+      downloadGSTSalesReportExcel(formattedFromDate, formattedToDate);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    }
+  };
+
   return (
     <Box>
-      <Button onClick={generatePDF} variant="contained">
+      <Button onClick={generateGSTExcel} variant="contained">
         Generate Bill
       </Button>
     </Box>

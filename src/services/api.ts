@@ -262,6 +262,20 @@ const updateOfflineOrder = async (orderId: string, updatedData: any) => {
   }
 };
 
+const downloadGSTSalesReportExcel = async (
+  fromDate: string,
+  toDate: string
+) => {
+  try {
+    const url = `${
+      import.meta.env.VITE_AXIOS_BASE_URL
+    }product/downloadGSTSalesReportExcel/${fromDate}/${toDate}`;
+    window.open(url, "_blank");
+  } catch (error) {
+    throw error;
+  }
+};
+
 export {
   getCategories,
   generateResetLink,
@@ -282,4 +296,5 @@ export {
   getOnlineSellingReport,
   getOfflineOrdersByOrderNumber,
   updateOfflineOrder,
+  downloadGSTSalesReportExcel,
 };
