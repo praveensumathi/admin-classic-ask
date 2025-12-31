@@ -149,7 +149,7 @@ function NavbarDrawer(props: INavbarProps) {
         }}
       >
         <Typography sx={{ display: "flex", alignItems: "center" }}>
-          &copy; {new Date().getFullYear()} Venusethnic
+          &copy; {new Date().getFullYear()} {import.meta.env.VITE_HEADER_NAME}
         </Typography>
         <Typography>All rights reserved.</Typography>
       </Box>
