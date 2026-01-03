@@ -33,11 +33,11 @@ import {
 import { ICategory } from "../interface/category";
 import { useSnackBar } from "../context/SnackBarContext";
 import ProductImage from "../common/components/ProductImage";
-import { Radio, RadioGroup, FormControlLabel } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import CircularProgress from "@mui/material/CircularProgress";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 interface IProps {
   selectedProduct: IProduct;
@@ -120,7 +120,7 @@ function ProductDialog(props: IProps) {
     }
   }, [selectedProduct]);
 
-  const addTextField = () => {
+  const addNewSizeRow = () => {
     setSizeList([
       ...sizeList,
       {
@@ -725,7 +725,7 @@ function ProductDialog(props: IProps) {
                 <Typography variant="h6" fontWeight={"bold"}>
                   sizes
                 </Typography>
-                <Button variant="outlined" onClick={addTextField}>
+                <Button variant="outlined" onClick={addNewSizeRow}>
                   <AddIcon />
                   Add
                 </Button>
@@ -853,7 +853,7 @@ function ProductDialog(props: IProps) {
                       />
                     </>
                   </Grid>
-                  <Grid item xs={1.4} mb={1}>
+                  {/* <Grid item xs={1.4} mb={1}>
                     <>
                       <Typography
                         key={`purchasePrice-${index}`}
@@ -940,7 +940,7 @@ function ProductDialog(props: IProps) {
                         margin="dense"
                       />
                     </>
-                  </Grid>
+                  </Grid> */}
                   <Grid item xs={1.2} mb={1}>
                     <>
                       <Typography
@@ -995,10 +995,18 @@ function ProductDialog(props: IProps) {
                       />
                     </>
                   </Grid>
-                  <Grid item xs={1.2} mt={2}>
+                  <Grid item xs={0.5} mt={2}>
                     <IconButton>
                       <DeleteIcon onClick={() => handleDelete(index)} />
                     </IconButton>
+                    
+                  </Grid>
+                  <Grid item xs={1.2} mt={2}>
+                    <IconButton>
+                      <ContentCopyIcon />
+                    </IconButton>
+                    {/* <Button variant="outlined" onClick={addNewSizeRow}> */}
+                    {/* </Button> */}
                   </Grid>
                 </Grid>
               ))}
