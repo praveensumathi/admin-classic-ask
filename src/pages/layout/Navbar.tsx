@@ -77,12 +77,11 @@ function Navbar() {
         <AppBar component="nav">
           <Toolbar>
             <IconButton
-              color="inherit"
               aria-label="open drawer"
               edge="start"
               onClick={handleDrawerToggle}
             >
-              <MenuIcon />
+              <MenuIcon sx={{ color: "white !important" }} />
             </IconButton>
             <Box
               sx={{

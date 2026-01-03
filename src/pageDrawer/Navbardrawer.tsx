@@ -7,6 +7,7 @@ import StoreIcon from "@mui/icons-material/Store";
 import {
   Box,
   Divider,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -19,6 +20,7 @@ import CategoryIcon from "@mui/icons-material/Category";
 import GroupIcon from "@mui/icons-material/Group";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
+import theme from "../theme/theme";
 interface INavbarProps {
   onDrawerToggle(): void;
   role: string | null | undefined;
@@ -99,13 +101,15 @@ function NavbarDrawer(props: INavbarProps) {
         my={0}
         padding={3}
         sx={{
-          backgroundColor: "#ece7ee",
+          backgroundColor: theme.palette.secondary.main,
         }}
       >
         <Typography color="primary" sx={{ fontWeight: 800 }} fontSize={"large"}>
           {import.meta.env.VITE_HEADER_NAME}
         </Typography>
-        <ArrowBackIosIcon sx={{ fontSize: "large" }} color="primary" />
+        <IconButton>
+          <ArrowBackIosIcon sx={{ fontSize: "large" }} />
+        </IconButton>
       </Box>
       <Divider />
       <List>

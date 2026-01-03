@@ -50,7 +50,7 @@ function Customers() {
   const deleteCustomerMutation = useDeleteCustomer();
   const { updateSnackBarState } = useSnackBar();
 
-  const venusethnicURL = import.meta.env.VITE_CLASSIC_ASK_URL;
+  const portalURL = import.meta.env.VITE_WEB_PORTAL_URL;
 
   const fetchAllCustomers = async () => {
     try {
@@ -73,7 +73,7 @@ function Customers() {
 
     try {
       await generateResetLink(user.phoneNumber).then((link) => {
-        const resetLink = `${venusethnicURL}/#${link}`;
+        const resetLink = `${portalURL}/#${link}`;
         setResetLink(resetLink);
         setCopyLinkDialogOpen(true);
       });
@@ -223,11 +223,11 @@ function Customers() {
             <Table aria-label="simple table">
               <TableHead className={classes.table}>
                 <TableRow>
-                  <TableCell width={"20%"}>
+                  {/* <TableCell width={"20%"}>
                     <Typography variant="subtitle1" fontWeight="bold">
                       Reseller
                     </Typography>
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell width={"20%"}>
                     <Typography variant="subtitle1" fontWeight="bold">
                       PhoneNumber
@@ -262,7 +262,7 @@ function Customers() {
                   <>
                     {customerData.map((user, index) => (
                       <TableRow key={index}>
-                        <TableCell>
+                        {/* <TableCell>
                           <Checkbox
                             checked={user.isReseller}
                             onChange={() =>
@@ -272,7 +272,7 @@ function Customers() {
                               )
                             }
                           />
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell>{user.phoneNumber}</TableCell>
                         <TableCell>{user.name}</TableCell>
                         <TableCell>{user.email}</TableCell>

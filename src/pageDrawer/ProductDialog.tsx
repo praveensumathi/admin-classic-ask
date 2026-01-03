@@ -17,6 +17,7 @@ import {
   Select,
   Slide,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -37,12 +38,12 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import CircularProgress from "@mui/material/CircularProgress";
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 interface IProps {
   selectedProduct: IProduct;
   dialogOpen: boolean;
-  onCloseDialog(): void;
+  onCloseDialog(shouldRefetch?: boolean): void;
 }
 
 const Transition = React.forwardRef(function Transition(
@@ -129,10 +130,20 @@ function ProductDialog(props: IProps) {
         resellingPrice: undefined,
         inStock: 1,
         purchaseQty: 1,
-        netWeight: 1,
+        netWeight: 100,
         MRPprice: undefined,
         price: undefined,
         offlineSellingPrice: undefined,
+      },
+    ]);
+  };
+
+  const dplicateSizeRow = (sizeToCopy: ISize) => {
+    setSizeList([
+      ...sizeList,
+      {
+        ...sizeToCopy,
+        size: "",
       },
     ]);
   };
@@ -169,9 +180,9 @@ function ProductDialog(props: IProps) {
     setSellerName("");
   };
 
-  const handleCloseDialog = () => {
+  const handleCloseDialog = (shouldRefetch: boolean = false) => {
     resetForm();
-    onCloseDialog();
+    onCloseDialog(shouldRefetch);
   };
 
   const handleImagesUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -337,7 +348,7 @@ function ProductDialog(props: IProps) {
     if (!isEdit) {
       productCreateMutation.mutate(formData, {
         onSuccess: () => {
-          handleCloseDialog();
+          handleCloseDialog(true);
           updateSnackBarState(true, "Product added successfully.", "success");
         },
         onError: () => {
@@ -351,7 +362,7 @@ function ProductDialog(props: IProps) {
 
       updateProductMutation.mutate(formData, {
         onSuccess: () => {
-          handleCloseDialog();
+          handleCloseDialog(true);
           updateSnackBarState(true, "Product updated successfully.", "success");
         },
         onError: () => {
@@ -373,7 +384,7 @@ function ProductDialog(props: IProps) {
     <Dialog
       fullScreen
       open={ProductdialogOpen}
-      onClose={handleCloseDialog}
+      onClose={() => handleCloseDialog()}
       sx={{ height: "100%" }}
       TransitionComponent={Transition}
     >
@@ -390,7 +401,7 @@ function ProductDialog(props: IProps) {
           </Typography>
           <Button
             color="inherit"
-            onClick={handleCloseDialog}
+            onClick={() => handleCloseDialog()}
             sx={{
               float: "right",
             }}
@@ -435,7 +446,8 @@ function ProductDialog(props: IProps) {
                   id="outlined-basic"
                   variant="outlined"
                   multiline
-                  maxRows={6}
+                  minRows={2}
+                  maxRows={8}
                   value={product.description}
                   onChange={(e) =>
                     setProduct((prevState) => ({
@@ -719,7 +731,7 @@ function ProductDialog(props: IProps) {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  p: 2,
+                  pt: 3,
                 }}
               >
                 <Typography variant="h6" fontWeight={"bold"}>
@@ -730,18 +742,18 @@ function ProductDialog(props: IProps) {
                   Add
                 </Button>
               </Box>
-              {sizeList.map((value, index) => (
+              {sizeList.map((sizeObj, index) => (
                 <Grid
                   container
                   item
-                  spacing={1}
+                  spacing={2}
                   key={index}
                   sx={{
                     display: "flex",
                     alignItems: "center",
                   }}
                 >
-                  <Grid item xs={1.2} mb={1}>
+                  <Grid item xs={1.5} mb={1}>
                     <>
                       <Typography
                         key={`size-${index}`}
@@ -751,7 +763,7 @@ function ProductDialog(props: IProps) {
                       </Typography>
                       <TextField
                         id={`size-${index + 1}`}
-                        value={value.size}
+                        value={sizeObj.size}
                         onChange={(event) => {
                           const inputValue = event.target.value;
                           // const onlyLettersValue = inputValue
@@ -770,7 +782,7 @@ function ProductDialog(props: IProps) {
                       />
                     </>
                   </Grid>
-                  <Grid item xs={1.2} mb={1}>
+                  <Grid item xs={1.5} mb={1}>
                     <>
                       <Typography
                         key={`inStock-${index}`}
@@ -780,7 +792,7 @@ function ProductDialog(props: IProps) {
                       </Typography>
                       <TextField
                         id={`inStock-${index + 2}`}
-                        value={value.inStock}
+                        value={sizeObj.inStock}
                         onChange={(event) => {
                           const inputValue = event.target.value;
                           const numericValue = inputValue.replace(
@@ -795,7 +807,7 @@ function ProductDialog(props: IProps) {
                       />
                     </>
                   </Grid>
-                  <Grid item xs={1.2} mb={1}>
+                  <Grid item xs={1.5} mb={1}>
                     <>
                       <Typography
                         key={`purchaseQty-${index}`}
@@ -805,7 +817,7 @@ function ProductDialog(props: IProps) {
                       </Typography>
                       <TextField
                         id={`purchaseQty-${index + 2}`}
-                        value={value.purchaseQty}
+                        value={sizeObj.purchaseQty}
                         onChange={(event) => {
                           const inputValue = event.target.value;
                           const numericValue = inputValue.replace(
@@ -824,17 +836,17 @@ function ProductDialog(props: IProps) {
                       />
                     </>
                   </Grid>
-                  <Grid item xs={1.2} mb={1}>
+                  <Grid item xs={1.5} mb={1}>
                     <>
                       <Typography
                         key={`netWeight-${index}`}
                         sx={{ fontSize: "11px", padding: "10px 0" }}
                       >
-                        Net Weight
+                        Net Weight (g)
                       </Typography>
                       <TextField
                         id={`netWeight-${index + 2}`}
-                        value={value.netWeight}
+                        value={sizeObj.netWeight}
                         onChange={(event) => {
                           const inputValue = event.target.value;
                           const numericValue = inputValue.replace(
@@ -881,8 +893,8 @@ function ProductDialog(props: IProps) {
                         margin="dense"
                       />
                     </>
-                  </Grid>
-                  <Grid item xs={1.2} mb={1}>
+                  </Grid> */}
+                  <Grid item xs={1.5} mb={1}>
                     <>
                       <Typography
                         key={` MRPprice-${index}`}
@@ -892,7 +904,7 @@ function ProductDialog(props: IProps) {
                       </Typography>
                       <TextField
                         id={` MRPprice-${index + 3}`}
-                        value={value.MRPprice ?? ""}
+                        value={sizeObj.MRPprice ?? ""}
                         onChange={(event) => {
                           const inputValue = event.target.value;
 
@@ -912,7 +924,7 @@ function ProductDialog(props: IProps) {
                       />
                     </>
                   </Grid>
-                  <Grid item xs={1.2} mb={1}>
+                  {/* <Grid item xs={1.2} mb={1}>
                     <>
                       <Typography
                         key={`resellingPrice-${index}`}
@@ -941,7 +953,7 @@ function ProductDialog(props: IProps) {
                       />
                     </>
                   </Grid> */}
-                  <Grid item xs={1.2} mb={1}>
+                  <Grid item xs={1.5} mb={1}>
                     <>
                       <Typography
                         key={`price-${index}`}
@@ -951,7 +963,7 @@ function ProductDialog(props: IProps) {
                       </Typography>
                       <TextField
                         id={`price-${index + 4}`}
-                        value={value.price}
+                        value={sizeObj.price}
                         onChange={(event) => {
                           const inputValue = event.target.value;
                           const numericValue = inputValue.replace(
@@ -966,7 +978,7 @@ function ProductDialog(props: IProps) {
                       />
                     </>
                   </Grid>
-                  <Grid item xs={1} mb={1}>
+                  {/* <Grid item xs={1} mb={1}>
                     <>
                       <Typography
                         key={`offlineSellingPrice-${index}`}
@@ -994,19 +1006,20 @@ function ProductDialog(props: IProps) {
                         margin="dense"
                       />
                     </>
-                  </Grid>
-                  <Grid item xs={0.5} mt={2}>
-                    <IconButton>
-                      <DeleteIcon onClick={() => handleDelete(index)} />
-                    </IconButton>
-                    
-                  </Grid>
-                  <Grid item xs={1.2} mt={2}>
-                    <IconButton>
-                      <ContentCopyIcon />
-                    </IconButton>
-                    {/* <Button variant="outlined" onClick={addNewSizeRow}> */}
-                    {/* </Button> */}
+                  </Grid> */}
+                  <Grid item xs={0.8} mt={2} display={"flex"} gap={2}>
+                    <Tooltip title="Delete">
+                      <IconButton>
+                        <DeleteIcon onClick={() => handleDelete(index)} />
+                      </IconButton>
+                    </Tooltip>
+                    {!isEdit && (
+                      <Tooltip title="Duplicate">
+                        <IconButton onClick={() => dplicateSizeRow(sizeObj)}>
+                          <ContentCopyIcon />
+                        </IconButton>
+                      </Tooltip>
+                    )}
                   </Grid>
                 </Grid>
               ))}
@@ -1015,7 +1028,7 @@ function ProductDialog(props: IProps) {
         </DialogContent>
         <Box mr={4} mb={2}>
           <DialogActions>
-            <Button variant="outlined" onClick={handleCloseDialog}>
+            <Button variant="outlined" onClick={() => handleCloseDialog()}>
               Cancel
             </Button>
             <Button type="submit" variant="contained">

@@ -25,9 +25,10 @@ const theme = createTheme({
     MuiIconButton: {
       styleOverrides: {
         root: {
-          // color: "#914298",
+          color: "#1B4C8C",
           "&:hover": {
-            backgroundColor: "#d7a8df",
+            backgroundColor: "#1B4C8C",
+            color: "white",
           },
         },
       },

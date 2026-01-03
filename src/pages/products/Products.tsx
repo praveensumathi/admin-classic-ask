@@ -94,8 +94,9 @@ function Products() {
     setSearchProductCode("");
   };
 
-  const handleDialogclose = () => {
+  const handleDialogclose = (shouldRefetch: boolean = false) => {
     setProductDialogOpen(false);
+    if (shouldRefetch) refetch();
   };
 
   const handleEditProduct = (product: IProduct) => {
